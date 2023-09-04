@@ -32,7 +32,6 @@ func (r *userRepository) FindAll() ([]*models.User, error) {
 	var users []*models.User
 
 	err := r.db.Find(&users).Error
-
 	if err != nil {
 		return users, err
 	}
@@ -40,25 +39,10 @@ func (r *userRepository) FindAll() ([]*models.User, error) {
 	return users, nil
 }
 
-// FindByEmail implements UserRepository.
-func (r *userRepository) FindByEmail(email string) (*models.User, error) {
+func (r *userRepository) FindById(id int) (*models.User, error) {
 	var user *models.User
 
-	err := r.db.Where("email = ?", email).Find(&user).Error
-
-	if err != nil {
-		return user, err
-	}
-
-	return user, nil
-
-}
-
-// FindById implements UserRepository.
-func (r *userRepository) FindById(id int) ([]*models.User, error) {
-	var user *models.User
-
-	err := r.db.Where("id = ?", id).Find(&user).Error
+	err := r.db.Where("id =?", id).Find(&user).Error
 	if err != nil {
 		return user, err
 	}
@@ -66,7 +50,6 @@ func (r *userRepository) FindById(id int) ([]*models.User, error) {
 	return user, nil
 }
 
-// FindByName implements UserRepository.
 func (r *userRepository) FindByName(name string) ([]*models.User, error) {
 	var users []*models.User
 
@@ -78,7 +61,17 @@ func (r *userRepository) FindByName(name string) ([]*models.User, error) {
 	return users, nil
 }
 
-// Save implements UserRepository.
+func (r *userRepository) FindByEmail(email string) (*models.User, error) {
+	var user *models.User
+
+	err := r.db.Where("email = ?", email).Find(&user).Error
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
 func (r *userRepository) Save(user *models.User) (*models.User, error) {
 	err := r.db.Create(&user).Error
 	if err != nil {
@@ -86,10 +79,8 @@ func (r *userRepository) Save(user *models.User) (*models.User, error) {
 	}
 
 	return user, nil
-
 }
 
-// Update implements UserRepository.
 func (r *userRepository) Update(user *models.User) (*models.User, error) {
 	err := r.db.Save(&user).Error
 	if err != nil {
